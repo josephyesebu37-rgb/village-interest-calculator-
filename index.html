@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>వడ్డీ కాలిక్యులేటర్ (Village Style)</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Telugu', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Hide number input arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen py-8 text-gray-800">
+
+    <!-- App Header -->
+    <div class="w-full max-w-md px-4 mb-6 text-center">
+        <div class="bg-blue-700 text-white p-4 rounded-2xl shadow-lg flex items-center justify-center gap-3">
+            <!-- Calculator Icon SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+            <h1 class="text-2xl font-bold">వడ్డీ కాలిక్యులేటర్</h1>
+        </div>
+        <p class="text-gray-500 text-sm mt-2 font-medium">గ్రామీణ పద్ధతిలో (నెలవారీ వడ్డీ) లెక్కలు</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-6 space-y-6">
+        
+        <!-- Toggle Button -->
+        <div class="flex bg-gray-100 p-1 rounded-xl">
+            <button id="btnSimple" onclick="setInterestType('simple')" class="flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-200 bg-white text-blue-700 shadow-md">
+                సాధారణ వడ్డీ
+                <span class="block text-xs font-normal opacity-70">Simple Interest</span>
+            </button>
+            <button id="btnCompound" onclick="setInterestType('compound')" class="flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-700">
+                చక్ర వడ్డీ
+                <span class="block text-xs font-normal opacity-70">Compound Interest</span>
+            </button>
+        </div>
+
+        <!-- Inputs Section -->
+        <div class="space-y-4">
+            
+            <!-- Principal -->
+            <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">
+                    అప్పు మొత్తం (Principal Amount)
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <!-- Rupee Icon -->
+                        <svg class="text-gray-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 10"/><path d="M6 13h3"/><path d="M9 13c6.668 0 8-5.406 8-9"/></svg>
+                    </div>
+                    <input type="number" id="principal" placeholder="ఉదా: 10000" oninput="calculate()" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-lg font-semibold text-gray-800">
+                </div>
+            </div>
+
+            <!-- Rate -->
+            <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">
+                    వడ్డీ రేటు (నెలకు రూపాయిలలో)
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <!-- Percent Icon -->
+                        <svg class="text-gray-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="5" y1="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                    </div>
+                    <input type="number" id="rate" placeholder="ఉదా: 2 (రెండు రూపాయిల వడ్డీ)" oninput="calculate()" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-lg font-semibold text-gray-800">
+                </div>
+                <p class="text-xs text-orange-600 mt-1 ml-1 font-medium">* బ్యాంకు లెక్క కాదు, మన ఊరి నెలవారీ లెక్క.</p>
+            </div>
+
+            <!-- Months -->
+            <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">
+                    కాలం (ఎన్ని నెలలు?)
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <!-- Calendar Icon -->
+                        <svg class="text-gray-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                    </div>
+                    <input type="number" id="months" placeholder="ఉదా: 12" oninput="calculate()" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-lg font-semibold text-gray-800">
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="flex justify-end">
+            <button onclick="resetFields()" class="text-gray-500 hover:text-red-500 flex items-center text-sm font-medium transition-colors cursor-pointer">
+                <svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                రీసెట్ చేయండి
+            </button>
+        </div>
+
+        <!-- Results Section (Hidden by default) -->
+        <div id="resultCard" class="hidden bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-white shadow-lg animate-fade-in mt-4">
+            <h3 class="text-slate-300 text-sm font-medium uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">
+                ఫలితం (<span id="resultTypeLabel">సాధారణ వడ్డీ</span>)
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="flex justify-between items-end">
+                    <span class="text-slate-300 text-sm">కేవలం వడ్డీ:</span>
+                    <span id="displayInterest" class="text-2xl font-bold text-yellow-400">₹0</span>
+                </div>
+                
+                <div class="flex justify-between items-end pt-2 border-t border-slate-700">
+                    <span class="text-slate-200 font-medium">మొత్తం కట్టాల్సినది:</span>
+                    <span id="displayTotal" class="text-3xl font-bold text-green-400">₹0</span>
+                </div>
+            </div>
+
+            <!-- WhatsApp Button -->
+            <button onclick="shareOnWhatsApp()" class="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16.93 16.93A8 8 0 0 1 12 20a8 8 0 0 1-5.66-2.34L3 21l3.34-3.34A8 8 0 0 1 5 12a8 8 0 0 1 8-8 8 8 0 0 1 8 8c0 2.12-.84 4.16-2.34 5.66z"/></svg>
+                Share on WhatsApp
+            </button>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-8 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+            <p class="text-gray-400 font-medium">వివరాలు ఎంటర్ చేస్తే ఇక్కడ ఫలితం కనిపిస్తుంది.</p>
+        </div>
+
+    </div>
+    
+    <div class="mt-8 text-center text-gray-400 text-xs">
+        <p>Made for easy finance calculations</p>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let currentType = 'simple'; // 'simple' or 'compound'
+
+        // Function to toggle between Simple and Compound Interest
+        function setInterestType(type) {
+            currentType = type;
+            const btnSimple = document.getElementById('btnSimple');
+            const btnCompound = document.getElementById('btnCompound');
+
+            if (type === 'simple') {
+                // Style Active
+                btnSimple.className = "flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-200 bg-white text-blue-700 shadow-md";
+                // Style Inactive
+                btnCompound.className = "flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-700";
+            } else {
+                // Style Inactive
+                btnSimple.className = "flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-200 text-gray-500 hover:text-gray-700";
+                // Style Active
+                btnCompound.className = "flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-200 bg-white text-purple-700 shadow-md";
+            }
+            calculate();
+        }
+
+        // Main Calculation Logic
+        function calculate() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value);
+            const months = parseFloat(document.getElementById('months').value);
+
+            const resultCard = document.getElementById('resultCard');
+            const emptyState = document.getElementById('emptyState');
+
+            // If any input is missing, hide results
+            if (isNaN(principal) || isNaN(rate) || isNaN(months)) {
+                resultCard.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            let interest = 0;
+            let totalAmount = 0;
+
+            // Logic: Rate is per month (Village Style)
+            if (currentType === 'simple') {
+                // Simple Interest: P * R * T / 100
+                interest = (principal * rate * months) / 100;
+                totalAmount = principal + interest;
+            } else {
+                // Compound Interest: P * (1 + R/100)^T
+                totalAmount = principal * Math.pow((1 + rate / 100), months);
+                interest = totalAmount - principal;
+            }
+
+            // Show Results
+            resultCard.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            // Update UI
+            document.getElementById('resultTypeLabel').innerText = currentType === 'simple' ? 'సాధారణ వడ్డీ' : 'చక్ర వడ్డీ';
+            document.getElementById('displayInterest').innerText = formatCurrency(interest);
+            document.getElementById('displayTotal').innerText = formatCurrency(totalAmount);
+        }
+
+        // Helper to format currency like ₹10,000
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // WhatsApp Share Logic
+        function shareOnWhatsApp() {
+            const principal = document.getElementById('principal').value;
+            const rate = document.getElementById('rate').value;
+            const months = document.getElementById('months').value;
+            const interestText = document.getElementById('displayInterest').innerText;
+            const totalText = document.getElementById('displayTotal').innerText;
+            const typeText = currentType === 'simple' ? 'సాధారణ వడ్డీ' : 'చక్ర వడ్డీ';
+
+            if (!principal || !rate || !months) return;
+
+            const message = `
+*వడ్డీ లెక్కల వివరాలు:*
+------------------------
+💰 *అప్పు (అసలు):* ₹${principal}
+📊 *వడ్డీ రేటు:* నెలకు ${rate} రూపాయిలు
+📅 *కాలం:* ${months} నెలలు
+🔄 *పద్ధతి:* ${typeText}
+------------------------
+📈 *మొత్తం వడ్డీ:* ${interestText}
+💵 *మొత్తం కట్టాల్సిన డబ్బు:* ${totalText}
+------------------------
+_Generated by Interest Calculator App_
+            `.trim();
+
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+        }
+
+        // Reset Logic
+        function resetFields() {
+            document.getElementById('principal').value = '';
+            document.getElementById('rate').value = '';
+            document.getElementById('months').value = '';
+            calculate(); // hides result card
+        }
+    </script>
+</body>
+</html>
+
